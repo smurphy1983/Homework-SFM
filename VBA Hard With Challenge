@@ -1,0 +1,161 @@
+Sub RunMacroEveryWorkSheet()
+    Dim xSh As Worksheet
+    Application.ScreenUpdating = False
+    For Each xSh In Worksheets
+        xSh.Select
+        Call Hard
+    Next
+    Application.ScreenUpdating = True
+End Sub
+
+
+
+
+
+
+Sub Hard()
+
+Dim column As Integer
+Dim Ticker As String
+Dim Volume As Double
+Dim Summary_Table_Row As Integer
+
+column = 1
+Dim lastrow As Double
+With ActiveSheet
+lastrow = .Cells(.Rows.Count, "A").End(xlUp).Row
+End With
+Volume = 0
+Summary_Table_Row = 2
+
+
+Dim FirstValue As Double
+Dim First As Double
+FirstValue = 0
+First = 2
+Dim LastValue As Double
+Dim Last As Double
+LastValue = 0
+Last = 1
+Dim YearlyChange As Double
+Dim PercentChange As Double
+
+Cells(1, 11).Value = "Ticker"
+Cells(1, 12).Value = "Yearly Change"
+Cells(1, 13).Value = "Percent Change"
+Cells(1, 14).Value = "Total Volume"
+
+For i = 2 To lastrow
+    
+    If Cells(i + 1, column).Value = Cells(i, column).Value Then
+         
+         Volume = Volume + Cells(i, 7).Value
+         FirstValue = Cells(First, 3).Value
+         
+        
+    Else
+        
+        Ticker = Cells(i, 1).Value
+        Volume = Volume + Cells(i, 7).Value
+        
+        Last = i
+        First = Last + 1
+        
+        LastValue = Cells(i, 6).Value
+        
+        YearlyChange = LastValue - FirstValue
+        
+                If FirstValue <> 0 Then
+        
+                     PercentChange = (YearlyChange / FirstValue)
+        
+               End If
+        
+        
+        Cells(Summary_Table_Row, 11).Value = Ticker
+        Cells(Summary_Table_Row, 12).Value = YearlyChange
+       
+             If YearlyChange >= 0 Then
+                Cells(Summary_Table_Row, 12).Interior.ColorIndex = 4
+             Else
+                Cells(Summary_Table_Row, 12).Interior.ColorIndex = 3
+             End If
+             
+        Cells(Summary_Table_Row, 13).Value = PercentChange
+        Cells(Summary_Table_Row, 14).Value = Volume
+        Summary_Table_Row = Summary_Table_Row + 1
+        
+        Volume = 0
+        YearlyChange = 0
+        PercentChange = 0
+        
+    
+            
+                    
+    End If
+    
+
+    
+Next i
+
+Dim lastrow2 As Double
+With ActiveSheet
+lastrow2 = .Cells(.Rows.Count, "K").End(xlUp).Row
+End With
+Dim GreatestTot As Double
+Dim GreatestInc As Double
+Dim GreatestDec As Double
+Dim GreatestTotTick As String
+Dim GreatestIncTick As String
+Dim GreatestDecTick As String
+
+
+GreatestTot = 0
+GreatestDec = 0
+GreatestInc = 0
+        
+For i = 2 To lastrow2
+
+If GreatestInc < Cells(i, 13).Value Then
+        
+        GreatestInc = Cells(i, 13).Value
+        GreatestIncTick = Cells(i, 11).Value
+        Cells(2, 17).Value = GreatestIncTick
+        Cells(2, 18).Value = Cells(i, 13).Value
+        Cells(2, 16).Value = "Greatest % Incresase "
+        
+        
+    ElseIf GreatestDec > Cells(i, 13).Value Then
+    
+        GreatestDec = Cells(i, 13).Value
+        GreatestDecTick = Cells(i, 11).Value
+        Cells(3, 17).Value = GreatestDecTick
+        Cells(3, 18).Value = Cells(i, 13).Value
+        Cells(3, 16).Value = "Greatest % Decrease "
+        
+    ElseIf GreatestTot < Cells(i, 14).Value Then
+    
+        GreatestTot = Cells(i, 14).Value
+        GreatestTotTick = Cells(i, 11).Value
+        Cells(4, 17).Value = GreatestTotTick
+        Cells(4, 18).Value = Cells(i, 14).Value
+        Cells(4, 16).Value = "Greatest Total "
+    
+    
+    End If
+
+Next i
+        
+End Sub
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,41 @@
+Sub Easy()
+
+Dim column As Integer
+Dim Ticker As String
+Dim Volume As Double
+Dim Summary_Table_Row As Integer
+column = 1
+Dim lastrow As Double
+With ActiveSheet
+lastrow = .Cells(.Rows.Count, "A").End(xlUp).Row
+End With
+Volume = 0
+Summary_Table_Row = 2
+
+Cells(1, 11).Value = "Ticker"
+Cells(1, 12).Value = "Yearly Change"
+Cells(1, 13).Value = "Percent Change"
+Cells(1, 14).Value = "Total Volume"
+
+For i = 2 To lastrow
+    
+    If Cells(i + 1, column).Value = Cells(i, column).Value Then
+         
+         Volume = Volume + Cells(i, 7).Value
+        
+    Else
+        
+        Ticker = Cells(i, 1).Value
+        Volume = Volume + Cells(i, 7).Value
+        Cells(Summary_Table_Row, 10).Value = Ticker
+        Cells(Summary_Table_Row, 11).Value = Volume
+        Summary_Table_Row = Summary_Table_Row + 1
+        Volume = 0
+        
+    End If
+    
+Next i
+        
+End Sub
+
+
